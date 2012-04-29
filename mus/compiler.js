@@ -17,25 +17,23 @@ function pDuration(parExpr) {
 function compile (musexpr) {
     var sequence = [],
         time = 0;
+
+    function pushNote(note) {
+        sequence.push({ tag: 'note',
+                       pitch: convertPitch(note.pitch),
+                       dur: note.dur,
+                       start: time });
+    }
     
     function compileHelper(expr) {
         if (expr.tag == 'rest') {
             time += expr.dur;
         } else if (expr.tag == 'note') {
-            sequence.push({ tag: 'note',
-                           pitch: convertPitch(expr.pitch),
-                           dur: expr.dur,
-                           start: time });
+            pushNote(expr);
             time += expr.dur;
         } else if (expr.tag == 'par') {
-            sequence.push({ tag: 'note',
-                           pitch: convertPitch(expr.left.pitch),
-                           dur: expr.left.dur,
-                           start: time });
-            sequence.push({ tag: 'note',
-                           pitch: convertPitch(expr.right.pitch),
-                           dur: expr.right.dur,
-                           start: time });
+            pushNote(expr.left);
+            pushNote(expr.right);
             time += pDuration(expr);
         } else if (expr.tag == 'seq') {
             compileHelper(expr.left);
