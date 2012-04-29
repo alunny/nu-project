@@ -7,28 +7,6 @@ function endTime (time, expr) {
     }
 };
 
-function compile (musexpr) {
-    var sequence = [],
-        time = 0;
-    
-    function compileHelper(expr) {
-        if (expr.tag == 'note') {
-            sequence.push({ tag: 'note',
-                           pitch: expr.pitch,
-                           dur: expr.dur,
-                           start: time });
-            time += expr.dur;
-        } else {
-            compileHelper(expr.left);
-            compileHelper(expr.right);
-        }                 
-    }
-    
-    // your code here
-    compileHelper(musexpr);
-    return sequence;
-};
-
 // this is all you
 // maybe some helper functions
 function pDuration(parExpr) {
@@ -36,12 +14,14 @@ function pDuration(parExpr) {
     return Math.max(parExpr.left.dur, parExpr.right.dur);
 }
 
-function compileT (musexpr) {
+function compile (musexpr) {
     var sequence = [],
         time = 0;
     
     function compileHelper(expr) {
-        if (expr.tag == 'note') {
+        if (expr.tag == 'rest') {
+            time += expr.dur;
+        } else if (expr.tag == 'note') {
             sequence.push({ tag: 'note',
                            pitch: expr.pitch,
                            dur: expr.dur,
@@ -57,7 +37,7 @@ function compileT (musexpr) {
                            dur: expr.right.dur,
                            start: time });
             time += pDuration(expr);
-        } else {
+        } else if (expr.tag == 'seq') {
             compileHelper(expr.left);
             compileHelper(expr.right);
         }                 
@@ -75,7 +55,7 @@ var melody_mus =
                 right: { tag: 'note', pitch: 'b4', dur: 250 } },
         right:
             { tag: 'seq',
-                left: { tag: 'note', pitch: 'c4', dur: 500 },
+                left: { tag: 'rest', pitch: 'c4', dur: 100 },
                 right: { tag: 'note', pitch: 'd4', dur: 500 } } };
 
 console.log(melody_mus);
