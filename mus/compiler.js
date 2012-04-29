@@ -26,6 +26,8 @@ function compile (musexpr) {
     }
     
     function compileHelper(expr) {
+        var i = 0;
+
         if (expr.tag == 'rest') {
             time += expr.dur;
         } else if (expr.tag == 'note') {
@@ -38,7 +40,12 @@ function compile (musexpr) {
         } else if (expr.tag == 'seq') {
             compileHelper(expr.left);
             compileHelper(expr.right);
-        }                 
+        } else if (expr.tag == 'repeat') {
+            for (i=0; i < expr.count; i++) {
+                pushNote(expr.section);
+                time += expr.section.dur;
+            }
+        }
     }
     
     compileHelper(musexpr);
@@ -66,7 +73,12 @@ var melody_mus =
         right:
             { tag: 'seq',
                 left: { tag: 'note', pitch: 'c4', dur: 100 },
-                right: { tag: 'note', pitch: 'd4', dur: 500 } } };
+                right: { 
+                    tag: 'repeat',
+                    section: { tag: 'note', pitch: 'd4', dur: 250 },
+                    count: 3
+                } }
+    };
 
 console.log(melody_mus);
 console.log(compile(melody_mus));
