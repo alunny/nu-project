@@ -6,6 +6,7 @@ var PEG = require('pegjs'),
     parse = PEG.buildParser(data).parse,
     whitespace = read('scheem-whitespace.schm'),
     quote = read('scheem-quote.schm');
+    comment = read('scheem-comment.schm');
 
 assert.deepEqual(parse("(* n 2)"), ['*', 'n', '2']);
 
@@ -21,5 +22,9 @@ assert.deepEqual(parse(whitespace),
                         ]]]]]);
 
 assert.deepEqual(parse(quote),
+                        ['+', ['*', 'n', '2'],
+                            ['quote', ['2', '3']]])
+
+assert.deepEqual(parse(comment),
                         ['+', ['*', 'n', '2'],
                             ['quote', ['2', '3']]])

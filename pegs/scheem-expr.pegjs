@@ -1,5 +1,5 @@
 start =
-    expr:expression space*
+    expr:expression ignore*
         { return expr }
 
 expression =
@@ -12,7 +12,7 @@ list =
         { return contents }
 
 listContents =
-    head:expression space tail:listContents
+    head:expression ignore+ tail:listContents
          { return [head].concat(tail) }
      /
     expr:expression
@@ -31,3 +31,10 @@ validchar
 atom =
     chars:validchar+
         { return chars.join(""); }
+
+comment =
+    ";" [^\n]* "\n"
+
+ignore =
+    space /
+    comment

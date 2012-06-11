@@ -1,0 +1,4 @@
+(+
+    (* n 2) ; inline comment
+    ;; also newline comment
+    '(2 3))
