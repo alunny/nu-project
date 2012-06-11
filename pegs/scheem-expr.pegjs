@@ -17,7 +17,7 @@ listContents =
          { return [expr] }
      
 space =
-    ' '
+    [ \n\t]+
     
 validchar
     = [0-9a-zA-Z_?!+\-=@#$%^&*/.]
