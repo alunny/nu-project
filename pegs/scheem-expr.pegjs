@@ -1,8 +1,10 @@
 start =
-    expression
+    expr:expression space*
+        { return expr }
 
 expression =
     atom /
+    quote /
     list
 
 list =
@@ -15,7 +17,11 @@ listContents =
      /
     expr:expression
          { return [expr] }
-     
+
+quote =
+    "'" quoted:list
+        { return ["quote", quoted]; }
+
 space =
     [ \n\t]+
     
